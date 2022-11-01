@@ -1,76 +1,128 @@
 package ru.netology.nasledovanie;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ProductTest {
 
-    Product product1 = new Product(1, "AA", 10);
-    Product product2 = new Product(2, "aa", 100);
-    Product product3 = new Product(3, "ab", 200);
-    Product repository = new Product(1, "AA", 10);
-    ProductManager manager = new ProductManager(repository);
 
-    @BeforeEach
-    public void setup() {
+    @Test
+    public void testAdd() {
+        Repository repo = new Repository();
+        ProductManager manager = new ProductManager(repo);
+        Product product1 = new Product(1, "AA", 10);
+
+        manager.add(product1);
+
+
+        Product[] expected = manager.findAll();
+        Product[] actual = {product1};
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+
+    @Test
+    public void testSearchWhenProductsFinded() {
+        Repository repo = new Repository();
+        ProductManager manager = new ProductManager(repo);
+        Product product1 = new Product(1, "AA", 10);
+        Product product2 = new Product(2, "aa", 100);
+        Product product3 = new Product(3, "ab", 200);
+        Product product4 = new Product(4, "ab", 300);
+
+
         manager.add(product1);
         manager.add(product2);
         manager.add(product3);
+        manager.add(product4);
+
+
+        Product[] expected = manager.searchBy("ab");
+        Product[] actual = {product3, product4};
+
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
-    public void saveProduct() {
-        Product repo = new Product(1, "AA", 10);
+    public void testSearchOneProductsFinded() {
+        Repository repo = new Repository();
+        ProductManager manager = new ProductManager(repo);
+        Product product1 = new Product(1, "AA", 10);
+        Product product2 = new Product(2, "aa", 100);
+        Product product3 = new Product(3, "ab", 200);
+        Product product4 = new Product(4, "ab", 300);
 
-        repo.saveProducts(product1);
-        repo.saveProducts(product2);
 
-        Product[] expected = {product1, product2};
-        Product[] actual = repo.getProducts();
+        manager.add(product1);
+        manager.add(product2);
+        manager.add(product3);
+        manager.add(product4);
+
+        Product[] expected = manager.searchBy("AA");
+        Product[] actual = {product1};
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testSearchNoProductsFinded() {
+        Repository repo = new Repository();
+        ProductManager manager = new ProductManager(repo);
+        Product product1 = new Product(1, "AA", 10);
+        Product product2 = new Product(2, "aa", 100);
+        Product product3 = new Product(3, "ab", 200);
+        Product product4 = new Product(4, "ab", 300);
+
+
+        manager.add(product1);
+        manager.add(product2);
+        manager.add(product3);
+        manager.add(product4);
+
+        Product[] expected = manager.searchBy("OO");
+        Product[] actual = {};
 
         Assertions.assertArrayEquals(expected, actual);
     }
 
     @Test
     public void removeIdProduct() {
-        Product repo = new Product(1, "aa", 10);
-        repo.saveProducts(product1);
-        repo.saveProducts(product2);
-        repo.saveProducts(product3);
+        Repository repo = new Repository();
+        ProductManager manager = new ProductManager(repo);
+        Product product1 = new Product(1, "AA", 10);
+        Product product2 = new Product(2, "aa", 100);
+        Product product3 = new Product(3, "ab", 200);
+        Product product4 = new Product(4, "ab", 300);
+
+
+        manager.add(product1);
+        manager.add(product2);
+        manager.add(product3);
+        manager.add(product4);
         repo.removeById(product2.getId());
 
-        Product[] expected = {product1, product3};
-        Product[] actual = repo.getProducts();
+        Product[] expected = repo.getProducts();
+        Product[] actual = {product1, product3, product4};
 
         Assertions.assertArrayEquals(expected, actual);
     }
 
-    @Test
-    public void shouldGetProduct() {
-
-        Product[] expected = {product1, product2, product3};
-        Product[] actual = manager.getProducts();
-
-        Assertions.assertArrayEquals(expected, actual);
-    }
 
     @Test
     public void shouldFinAll() {
+        Repository repo = new Repository();
+        ProductManager manager = new ProductManager(repo);
+        Product product1 = new Product(1, "AA", 10);
+        Product product2 = new Product(2, "aa", 100);
+        Product product3 = new Product(3, "ab", 200);
+
+        manager.add(product1);
+        manager.add(product2);
+        manager.add(product3);
 
         Product[] expected = {product1, product2, product3};
-        Product[] actual = repository.findAll();
-
-        Assertions.assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldSearchBy() {
-        Product repo = new Product(1, "AA", 10);
-
-
-        Product[] expected = {};
-        Product[] actual = manager.searchBy("AA");
+        Product[] actual = repo.findAll();
 
         Assertions.assertArrayEquals(expected, actual);
     }
